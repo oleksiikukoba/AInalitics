@@ -7,19 +7,40 @@ import openai
 import time
 import re
 
-# Імпорт ключів API
-try:
-    from config_keys import YOUTUBE_API_KEY, OPENAI_API_KEY
-except ImportError:
-    st.error("Помилка: Не знайдено файл config_keys.py або в ньому відсутні YOUTUBE_API_KEY та OPENAI_API_KEY.")
-    st.stop() # Зупиняємо виконання, якщо ключі не знайдено
+# app.py
+# ... (імпорти streamlit, pandas, datetime, etc.) ...
+import os # Переконайся, що цей імпорт є або додай його
 
-# Налаштування OpenAI API ключа
-if OPENAI_API_KEY:
-    openai.api_key = OPENAI_API_KEY
-else:
-    st.error("Помилка: Ключ OpenAI API не надано у файлі config_keys.py.")
+# --- Отримання API ключів ---
+# Спочатку намагаємося отримати з секретів Streamlit Cloud (якщо додаток розгорнуто)
+# Ці імена змінних YOUTUBE_API_KEY та OPENAI_API_KEY мають збігатися з тими, 
+# які ти вкажеш у налаштуваннях секретів на Streamlit Cloud.
+YOUTUBE_API_KEY = st.secrets.get("YOUTUBE_API_KEY")
+OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY")
+
+# Якщо ключі не знайдено в секретах Streamlit Cloud (наприклад, при локальному запуску),
+# намагаємося завантажити їх з локального файлу config_keys.py
+if not YOUTUBE_API_KEY or not OPENAI_API_KEY:
+    # st.sidebar.caption("Ключі не знайдено в Streamlit Secrets, завантажую з config_keys.py") # Для відладки
+    try:
+        from config_keys import YOUTUBE_API_KEY as YOUTUBE_API_KEY_local
+        from config_keys import OPENAI_API_KEY as OPENAI_API_KEY_local
+        YOUTUBE_API_KEY = YOUTUBE_API_KEY_local
+        OPENAI_API_KEY = OPENAI_API_KEY_local
+    except ImportError:
+        # Цей st.error буде видно і локально, і в хмарі, якщо ніде немає ключів
+        st.error("Помилка: Не вдалося завантажити API ключі. "
+                 "Переконайтеся, що вони налаштовані як секрети в Streamlit Cloud (якщо розгорнуто), "
+                 "або існує локальний файл config_keys.py з коректними ключами.")
+        st.stop() # Зупиняємо виконання, якщо ключі не завантажено
+
+# Фінальна перевірка, чи ключі дійсно є
+if not YOUTUBE_API_KEY or not OPENAI_API_KEY:
+    st.error("Помилка: YOUTUBE_API_KEY або OPENAI_API_KEY не визначені.")
     st.stop()
+
+# Налаштування OpenAI API ключа (YOUTUBE_API_KEY використовується напряму в функції)
+openai.api_key = OPENAI_API_KEY
 
 # ID YouTube-каналу "Армія TV"
 CHANNEL_ID = "UCWRZ7gEgbry5FI2-46EX3jA"
