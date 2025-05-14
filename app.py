@@ -186,8 +186,16 @@ def get_channel_videos(api_key, channel_id, start_date, end_date):
             if not next_page_token:
                 break
 
-        return pd.DataFrame(videos_data)
-
+# Створюємо DataFrame з зібраних даних
+        final_df = pd.DataFrame(videos_data)
+        
+        # --- ДОДАНО: Видалення дублікатів відео за їх 'id' ---
+        if not final_df.empty and 'id' in final_df.columns:
+            # keep='first' означає, що якщо є дублікати, залишиться перший зустрінутий екземпляр
+            final_df.drop_duplicates(subset=['id'], keep='first', inplace=True)
+        # --- КІНЕЦЬ ДОДАНОГО БЛОКУ ---
+            
+        return final_df
     except Exception as e:
         st.error(f"Помилка при отриманні даних з YouTube: {e}")
         # Повертаємо пустий DataFrame у випадку помилки, щоб додаток не "впав"
