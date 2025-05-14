@@ -776,12 +776,38 @@ if st.sidebar.button("🚀 Почати аналіз", type="primary"):
                                     unsafe_allow_html=True)
                 # --- КІНЕЦЬ БЛОКУ with cat_col2 ---
                 # --- ОСЬ ТУТ МАЄ БУТИ ФІЛЬТРАЦІЯ ---
-                cat_videos_p1_df_filtered = videos_p1_categorized_df[
-                    videos_p1_categorized_df['category'] == row_cat['category']
-                ] if not videos_p1_categorized_df.empty else pd.DataFrame()
-                cat_videos_p2_df_filtered = videos_p2_categorized_df[
-                    videos_p2_categorized_df['category'] == row_cat['category']
-                ] if not videos_p2_categorized_df.empty else pd.DataFrame()
+                cat_videos_p1_df_filtered = pd.DataFrame() # Ініціалізуємо як порожній DataFrame
+if not videos_p1_categorized_df.empty and 'category' in videos_p1_categorized_df.columns:
+    try:
+        cat_videos_p1_df_filtered = videos_p1_categorized_df[
+            videos_p1_categorized_df['category'] == row_cat['category']
+        ]
+    except Exception as e:
+        st.warning(f"Помилка при фільтрації відео Періоду 1 для категорії '{row_cat['category']}': {e}")
+        # Залишаємо cat_videos_p1_df_filtered порожнім, оскільки його вже ініціалізовано як порожній
+else:
+    if videos_p1_categorized_df.empty:
+        pass # DataFrame порожній, cat_videos_p1_df_filtered залишається порожнім
+    elif 'category' not in videos_p1_categorized_df.columns:
+        st.warning(f"Стовпець 'category' відсутній у даних Періоду 1 для аналізу категорії '{row_cat['category']}'.")
+        # cat_videos_p1_df_filtered залишається порожнім
+
+cat_videos_p2_df_filtered = pd.DataFrame() # Ініціалізуємо як порожній DataFrame
+if not videos_p2_categorized_df.empty and 'category' in videos_p2_categorized_df.columns:
+    try:
+        cat_videos_p2_df_filtered = videos_p2_categorized_df[
+            videos_p2_categorized_df['category'] == row_cat['category']
+        ]
+    except Exception as e:
+        st.warning(f"Помилка при фільтрації відео Періоду 2 для категорії '{row_cat['category']}': {e}")
+        # Залишаємо cat_videos_p2_df_filtered порожнім
+else:
+    if videos_p2_categorized_df.empty:
+        pass # DataFrame порожній, cat_videos_p2_df_filtered залишається порожнім
+    elif 'category' not in videos_p2_categorized_df.columns:
+        st.warning(f"Стовпець 'category' відсутній у даних Періоду 2 для аналізу категорії '{row_cat['category']}'.")
+        # cat_videos_p2_df_filtered залишається порожнім
+        
                 # --- КІНЕЦЬ БЛОКУ ФІЛЬТРАЦІЇ ---
                 # Тепер with cat_col3: (такий самий рівень відступу)
 
