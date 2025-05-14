@@ -777,12 +777,12 @@ if st.sidebar.button("🚀 Почати аналіз", type="primary"):
                 # --- КІНЕЦЬ БЛОКУ with cat_col2 ---
                 # --- ОСЬ ТУТ МАЄ БУТИ ФІЛЬТРАЦІЯ ---
                 cat_videos_p1_df_filtered = videos_p1_categorized_df[
-                    videos_p1_categorized_df['category'] == row_cat['category']
-                ] if not videos_p1_categorized_df.empty else pd.DataFrame()
-                cat_videos_p2_df_filtered = videos_p2_categorized_df[
-                    videos_p2_categorized_df['category'] == row_cat['category']
-                ] if not videos_p2_categorized_df.empty else pd.DataFrame()
-        
+                    videos_p1_categorized_df['category'] == row_cat['category']
+                ] if not videos_p1_categorized_df.empty else pd.DataFrame()
+                cat_videos_p2_df_filtered = videos_p2_categorized_df[
+                    videos_p2_categorized_df['category'] == row_cat['category']
+                ] if not videos_p2_categorized_df.empty else pd.DataFrame()
+                
                 # --- КІНЕЦЬ БЛОКУ ФІЛЬТРАЦІЇ ---
                 # Тепер with cat_col3: (такий самий рівень відступу)
 
