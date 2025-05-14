@@ -667,33 +667,44 @@ if st.sidebar.button("🚀 Почати аналіз", type="primary"):
 
         if not videos_p1_categorized_df.empty:
             st.subheader(f"Категоризація відео за Період 1 ({period1_label})")
-            progress_bar_1 = st.progress(0)
+            progress_bar_1 = st.progress(0.0) # Ініціалізуємо з 0.0 (float)
             status_text_1 = st.empty()
-            for i, row in videos_p1_categorized_df.iterrows():
+            num_videos_p1 = len(videos_p1_categorized_df) # Отримуємо загальну кількість один раз
+            
+            # Використовуємо enumerate для отримання послідовного індексу 'idx'
+            for idx, (df_index, row) in enumerate(videos_p1_categorized_df.iterrows()):
                 category = categorize_video_gpt(row['title'], row['description'], CATEGORIES)
-                videos_p1_categorized_df.loc[i, 'category'] = category
+                videos_p1_categorized_df.loc[df_index, 'category'] = category # Використовуємо оригінальний індекс df_index для .loc
                 time.sleep(0.1)
 
-                progress_percentage = (i + 1) / len(videos_p1_categorized_df)
-                progress_bar_1.progress(progress_percentage)
-                status_text_1.text(f"Обробка відео {i + 1}/{len(videos_p1_categorized_df)}...")
+                # Розраховуємо відсоток на основі послідовного індексу 'idx'
+                progress_percentage = (idx + 1) / num_videos_p1
+                # Додаткова гарантія, що значення не перевищить 1.0
+                progress_bar_1.progress(min(progress_percentage, 1.0)) 
+                status_text_1.text(f"Обробка відео {idx + 1}/{num_videos_p1}...")
             status_text_1.success(f"Категоризація відео за Період 1 завершена!")
             progress_bar_1.empty()
-
+# ...
         if not videos_p2_categorized_df.empty:
             st.subheader(f"Категоризація відео за Період 2 ({period2_label})")
-            progress_bar_2 = st.progress(0)
+            progress_bar_2 = st.progress(0.0) # Ініціалізуємо з 0.0 (float)
             status_text_2 = st.empty()
-            for i, row in videos_p2_categorized_df.iterrows():
+            num_videos_p2 = len(videos_p2_categorized_df) # Отримуємо загальну кількість один раз
+
+            # Використовуємо enumerate для отримання послідовного індексу 'idx'
+            for idx, (df_index, row) in enumerate(videos_p2_categorized_df.iterrows()):
                 category = categorize_video_gpt(row['title'], row['description'], CATEGORIES)
-                videos_p2_categorized_df.loc[i, 'category'] = category
+                videos_p2_categorized_df.loc[df_index, 'category'] = category # Використовуємо оригінальний індекс df_index для .loc
                 time.sleep(0.1)
 
-                progress_percentage = (i + 1) / len(videos_p2_categorized_df)
-                progress_bar_2.progress(progress_percentage)
-                status_text_2.text(f"Обробка відео {i + 1}/{len(videos_p2_categorized_df)}...")
+                # Розраховуємо відсоток на основі послідовного індексу 'idx'
+                progress_percentage = (idx + 1) / num_videos_p2
+                # Додаткова гарантія, що значення не перевищить 1.0
+                progress_bar_2.progress(min(progress_percentage, 1.0))
+                status_text_2.text(f"Обробка відео {idx + 1}/{num_videos_p2}...")
             status_text_2.success(f"Категоризація відео за Період 2 завершена!")
             progress_bar_2.empty()
+# ...
 
 
         # 3.1: Кількість відео та середні перегляди по категоріях + динаміка
